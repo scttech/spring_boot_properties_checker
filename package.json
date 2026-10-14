@@ -1,0 +1,101 @@
+{
+  "name": "spring-boot-security-checker",
+  "displayName": "Spring Boot Security Checker",
+  "description": "Flags production security problems in Spring Boot application.properties / application.yml files and provides a findings report.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "spring",
+    "spring boot",
+    "security",
+    "properties",
+    "yaml",
+    "lint"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "springBootSecurity.showReport",
+        "title": "Show Report",
+        "category": "Spring Boot Security",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "springBootSecurity.scanWorkspace",
+        "title": "Scan Workspace",
+        "category": "Spring Boot Security"
+      }
+    ],
+    "configuration": {
+      "title": "Spring Boot Security Checker",
+      "properties": {
+        "springBootSecurity.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable security checks on Spring Boot configuration files."
+        },
+        "springBootSecurity.minimumSeverity": {
+          "type": "string",
+          "default": "low",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
+          "description": "Only report findings at or above this severity."
+        },
+        "springBootSecurity.disabledRules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Rule IDs to disable, e.g. [\"SB-WEB-002\"]."
+        },
+        "springBootSecurity.fileNamePattern": {
+          "type": "string",
+          "default": "^(application|bootstrap)(-[\\w.-]+)?\\.(properties|ya?ml)$",
+          "description": "Regular expression matched against the file name to decide whether a file is a Spring Boot configuration file."
+        },
+        "springBootSecurity.scanWorkspaceOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan every Spring Boot configuration file in the workspace on startup so findings appear in the Problems panel."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p . --noEmit",
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "watch": "npm run build -- --watch",
+    "test": "node --import tsx --test test/*.test.ts",
+    "package": "vsce package --allow-missing-repository --no-rewrite-relative-links",
+    "vscode:prepublish": "npm run typecheck && npm run build -- --minify"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  }
+}

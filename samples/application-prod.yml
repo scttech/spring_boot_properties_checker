@@ -1,0 +1,16 @@
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: s3cret-store-pass
+    enabled-protocols: TLSv1,TLSv1.2
+  error:
+    include-stacktrace: on_param
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env
